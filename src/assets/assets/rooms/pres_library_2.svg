@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1_xA0_Image" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 4791 960">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <image id="bg" width="4791" height="960" xlink:href="../assets/rooms/pres_library_2.png"/>
+  <image id="magnifying glass" width="93" height="50" transform="translate(3125.7 594.07)" xlink:href="../assets/rooms/magnifying_glass.png"/>
+  <image id="old rope" width="123" height="327" transform="translate(1692.83 -1.97)" xlink:href="../assets/rooms/rusty_pulley.png"/>
+  <image id="new rope" width="174" height="459" transform="translate(1656.17)" xlink:href="../assets/rooms/pulley_repared.png"/>
+  <rect id="present new clock" x="1935.35" y="219.19" width="195.39" height="638.08" fill="transparent"/>
+  <image id="secret door" width="308" height="764" transform="translate(804.77 65.66)" xlink:href="../assets/rooms/secret door.png"/>
+  <rect id="painting_3" x="4435.63" y="65.02" width="289.02" height="360.25" fill="transparent"/>
+  <rect id="garden door_2" x="394.47" y="406.95" width="122.12" height="219.82" fill="transparent"/>
+  <circle id="thingy" cx="1222.35" cy="488.88" r="67.67" fill="transparent"/>
+  <rect id="thingy2" x="2703.56" y="500.58" width="73.27" height="113.98" fill="transparent"/>
+  <rect id="bookcase2" x="1145.51" y="65.66" width="482.37" height="130.64" fill="transparent"/>
+</svg>

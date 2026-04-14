@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="world_x5F_map__x2B__pulley_x5F_new__x2B__magnet__x2B__jar_x5F_room__x2B__pearl_xA0_Image" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 4759 960">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <image width="4759" height="960" xlink:href="../assets/rooms/old_library.png"/>
+  <rect id="past broken clock" x="2005.22" y="189.17" width="210.66" height="662.67" fill="transparent"/>
+  <image id="time door" width="523" height="960" transform="translate(1799.18)" xlink:href="../assets/rooms/time_door.png"/>
+  <image id="jar" width="38" height="60" transform="translate(3543.1 598.81)" xlink:href="../assets/rooms/jar_room.png"/>
+  <image id="magnet" width="52" height="64" transform="translate(3646.16 732.66)" xlink:href="../assets/rooms/magnet_room.png"/>
+  <image id="rod" width="428" height="574" transform="translate(3721 801.15) rotate(34.01) scale(.23)" xlink:href="../assets/rooms/rod.png"/>
+  <image id="gear" width="234" height="197" transform="translate(2711.13 885.69) rotate(-24.01) scale(.36)" xlink:href="../assets/rooms/gear.png"/>
+  <polygon id="vent" points="2167.02 924.95 2214.35 874.57 2608.18 866.94 2658.56 924.95 2167.02 924.95" fill="transparent"/>
+  <ellipse id="yarn" cx="4013.33" cy="781.84" rx="81.29" ry="27.86" fill="transparent"/>
+  <path id="supplies" d="M3397.64,658.81l9.16-30,34.35,15,6.87-40.57-25.19-50.37,38.93-22.13,43.51,29-16.03,43.51,9.92,39.69,74.8,15.88-41.22,21.52s-14.88,15.73-135.1-21.52Z" fill="transparent"/>
+  <polygon id="mapa mundi" points="3095.39 186.88 3095.39 134.98 2899.24 134.98 2899.24 400.59 2981.67 400.59 2981.67 435.7 3141.95 435.7 3141.95 186.88 3095.39 186.88" fill="transparent"/>
+  <polygon id="poster_1" points="2835.51 249.85 2885.88 249.85 2885.88 134.98 2659.19 134.98 2659.19 276.57 2835.51 276.57 2835.51 249.85" fill="transparent"/>
+  <path id="armchair" d="M4563.89,492.57l-114.49-36.64-185.47,10.69-33.58,32.82,26.71,137.39-105.33,23.66v130.52c0,10.69,6.11,83.19,6.11,83.19l27.48,4.58,12.21-53.43,147.31,16.79,4.58,70.98h41.98l6.11-67.17,80.9-24.42,10.69,49.61,29-.76s26.33-339.27,45.8-377.81Z" fill="transparent"/>
+  <rect id="painting_2" x="4357.81" y="86.13" width="295.57" height="295.57" fill="transparent"/>
+  <rect id="curly_plant" y="527.55" width="116.42" height="209.64" fill="transparent"/>
+  <rect id="no exit" x="455.82" y="447.92" width="54.95" height="206.08" fill="transparent"/>
+     <image id="rope" width="144" height="267" transform="translate(1859.56)" xlink:href="../assets/rooms/rope.png"/>
+
+</svg>

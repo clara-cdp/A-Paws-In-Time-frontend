@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1_xA0_Image" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 5628 3072">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <image id="bg" width="5628" height="3072" xlink:href="../assets/rooms/garden_2.png" isolation="isolate"/>
+  <circle id="big_gear_2" cx="1017.66" cy="2059.18" r="112.96" fill-opacity="0"/>
+  <ellipse id="pile_2" cx="3519.98" cy="1041.77" rx="69.46" ry="72.89" fill-opacity="0"/>
+  <rect id="big_pile_2" x="4526.75" y="1652.57" width="219.82" height="112.32" transform="translate(48.23 3543.03) rotate(-42.02)" fill-opacity="0"/>
+  <path id="blink_2" d="M2375.27,926.87l6.44-42.77s-10.57-4.83-10.57-55.64,28.97-13.33,28.97-13.33c0,0,1.84-43.92,15.18-7.36,0,0,25.38-23.79,18.4,21.61-6.44,41.85-10.44,67.74-1.84,99.8,5.06,18.85-75.19,7.59-56.57-2.3h0Z" fill-opacity="0"/>
+  <rect id="grease pot-2" x="1693.52" y="407.89" width="102.28" height="102.28" rx="30.53" ry="30.53" fill="transparent"/>
+  <path id="mansion's door_2" d="M1272.46,834.84v82.64l55.97-26.86v-97.1s3.82-32.02-27.99-17.56c-29.55,13.44-27.99,38.22-27.99,58.88h.01Z" fill="transparent"/>
+  <image id="seed" width="30" height="25" transform="translate(1819.15 2167.43) scale(.75)" xlink:href="../assets/rooms/seed_room.png" isolation="isolate"/>
+  <image id="grease jar" width="66" height="76" transform="translate(1808.34 527.88)" xlink:href="../assets/rooms/grease_jar_room.png" isolation="isolate"/>
+  <g id="booths">
+    <path d="M4574.82,543.37l-12.21,138.91s31.29,51.52,84.72,13.74l19.84-152.65-48.85-15.26-43.51,15.26Z" fill="transparent"/>
+    <polygon points="4748.84 536.51 4709.16 554.82 4712.21 720.45 4803.8 725.03 4803.8 556.35 4748.84 536.51" fill="transparent"/>
+  </g>
+</svg>
