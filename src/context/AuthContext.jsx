@@ -7,7 +7,6 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Initialize auth state from localStorage on load
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
@@ -34,7 +33,15 @@ export function AuthProvider({ children }) {
   };
 
   const isAuthenticated = !!token;
-  const isAdmin = user?.role === 'admin';
+  const isAdmin =
+    (typeof user?.role === 'string' && user.role.toLowerCase() === 'admin') ||
+    user?.is_admin === true ||
+    user?.is_admin === 1 ||
+    user?.role_id === 1 ||
+    (Array.isArray(user?.roles) && user.roles.some(r =>
+      (typeof r === 'string' && r.toLowerCase() === 'admin') ||
+      (r?.name && r.name.toLowerCase() === 'admin')
+    ));
 
   if (loading) return <div>Loading application...</div>;
 

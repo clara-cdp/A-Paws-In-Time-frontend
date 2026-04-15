@@ -1,14 +1,19 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 import bgImg from '../assets/assets/images/bg_img.png';
 
 export default function MainLayout() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   return (
-    <div className="min-h-screen bg-black flex flex-col relative overflow-hidden font-['Press_Start_2P'] selection:bg-teal-500 selection:text-black">
+    <div className={`min-h-screen flex flex-col relative overflow-hidden font-['Press_Start_2P'] selection:bg-teal-500 selection:text-black ${isAdminRoute ? 'admin-theme bg-[#020617]' : 'bg-black'}`}>
       {/* Background layer */}
       <div className="fixed inset-0 z-0">
-        <img src={bgImg} alt="Background" className="w-full h-full object-cover opacity-60" style={{ imageRendering: 'pixelated' }} />
+        {!isAdminRoute && (
+          <img src={bgImg} alt="Background" className="w-full h-full object-cover opacity-60" style={{ imageRendering: 'pixelated' }} />
+        )}
         {/* Retro Scanline Overlay */}
         <div className="absolute inset-0 scanlines pointer-events-none opacity-80"></div>
       </div>
