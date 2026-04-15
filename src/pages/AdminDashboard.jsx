@@ -141,7 +141,7 @@ export default function AdminDashboard() {
         <h2 className="text-xl md:text-2xl text-center mb-8 text-white uppercase tracking-widest drop-shadow-md">Admin Dashboard</h2>
 
         {/* Find Bar */}
-        <div className="mb-8 w-full max-w-md mx-auto">
+        <div className="mb-8 w-full">
           <PixelInput
             label="DATABASE SEARCH:"
             type="text"
