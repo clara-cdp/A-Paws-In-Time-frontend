@@ -57,13 +57,13 @@ export default function Auth() {
       if (isLogin) {
         const response = await api.post('/auth/login', { email, password });
         login(response.data.user, response.data.token);
-        navigate('/profile');
+        navigate('/games');
       } else {
         const response = await api.post('/auth/register', {
           name, email, password, password_confirmation: passwordConfirmation
         });
         login(response.data.user, response.data.token);
-        navigate('/profile');
+        navigate('/games');
       }
     } catch (err) {
       console.error(err);
