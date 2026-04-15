@@ -9,7 +9,7 @@ export default function Navbar() {
     <nav className="p-4 flex flex-wrap items-center justify-between w-full bg-[#0f172a] border-b-4 border-[#94a3b8] shadow-[0_4px_0_0_rgba(0,0,0,0.8)] z-50">
 
       <div className="flex items-center">
-        <img src={logicoBadge} alt="badge" className="h-20 w-auto mr-4" style={{ imageRendering: 'pixelated' }} />
+        <img src={logicoBadge} alt="badge" className="h-20 w-auto mr-4" />
       </div>
 
       <div className="flex items-center gap-4 text-[10px] md:text-xs uppercase">

@@ -88,7 +88,6 @@ export default function Auth() {
             src={logoTransp}
             alt="A Paws In Time Logo"
             className="w-max md:w-max drop-shadow-md"
-            style={{ imageRendering: 'pixelated' }}
           />
         </div>
 

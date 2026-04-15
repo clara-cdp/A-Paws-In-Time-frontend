@@ -12,7 +12,7 @@ export default function MainLayout() {
       {/* Background layer */}
       <div className="fixed inset-0 z-0">
         {!isAdminRoute && (
-          <img src={bgImg} alt="Background" className="w-full h-full object-cover opacity-60" style={{ imageRendering: 'pixelated' }} />
+          <img src={bgImg} alt="Background" className="w-full h-full object-cover opacity-60" />
         )}
         {/* Retro Scanline Overlay */}
         <div className="absolute inset-0 scanlines pointer-events-none opacity-80"></div>
@@ -23,7 +23,7 @@ export default function MainLayout() {
         <div className="w-full">
           <Navbar />
         </div>
-        
+
         {/* Content container spans remaining height */}
         <div className="flex-1 w-full flex flex-col items-center justify-center p-4">
           <Outlet />

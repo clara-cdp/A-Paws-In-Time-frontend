@@ -16,7 +16,7 @@ function UserCard({ user, onRefresh }) {
     try {
       await api.put(`/admin/users/${user.id}/block`);
       if (onRefresh) onRefresh();
-    } catch(err) {
+    } catch (err) {
       console.error(err);
       setErrorModal(err.response?.data?.message || 'Error updating block status.');
     }
@@ -29,9 +29,9 @@ function UserCard({ user, onRefresh }) {
           <h3 className="text-white text-sm tracking-wider uppercase truncate max-w-[200px] md:max-w-xs">{user.name}</h3>
           <p className="text-gray-400 text-[10px] mt-2 tracking-widest">ID: {user.id}</p>
         </div>
-        <PixelButton 
-          onClick={() => setExpanded(!expanded)} 
-          variant="secondary" 
+        <PixelButton
+          onClick={() => setExpanded(!expanded)}
+          variant="secondary"
           className="text-[10px] px-3 py-2 w-full md:w-auto text-center"
         >
           [ {expanded ? 'COLLAPSE' : 'VIEW MORE'} ]
@@ -44,32 +44,32 @@ function UserCard({ user, onRefresh }) {
             <p className="text-gray-300 text-[10px] md:text-xs">EMAIL: <span className="text-[#93c5fd] ml-2">{user.email}</span></p>
             <p className="text-gray-300 text-[10px] md:text-xs">ROLE: <span className="text-[#93c5fd] ml-2">{user.role || 'User'}</span></p>
             <p className="text-gray-300 text-[10px] md:text-xs">STATUS: <span className={user.is_active ? 'text-green-400 ml-2' : 'text-red-400 ml-2'}>{user.is_active ? 'ACTIVE' : 'INACTIVE'}</span></p>
-            
+
             {user.games_count !== undefined && (
               <p className="text-gray-300 text-[10px] md:text-xs">GAMES PLAYED: <span className="text-yellow-400 ml-2">{user.games_count}</span></p>
             )}
-            
+
             {user.game_list && user.game_list.length > 0 && (
-               <div className="flex flex-wrap gap-2 mt-2">
-                 {user.game_list.map((avatar, idx) => (
-                    <span key={idx} className="text-[10px] bg-blue-900 text-white px-2 py-1 border border-blue-500 rounded-sm">
-                      {avatar || 'Hero'}
-                    </span>
-                 ))}
-               </div>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {user.game_list.map((avatar, idx) => (
+                  <span key={idx} className="text-[10px] bg-blue-900 text-white px-2 py-1 border border-blue-500 rounded-sm">
+                    {avatar || 'Hero'}
+                  </span>
+                ))}
+              </div>
             )}
           </div>
           <div className="flex flex-col md:flex-row justify-end gap-4 mt-4">
-            <PixelButton 
-              onClick={handleBlockToggle} 
-              variant="secondary" 
+            <PixelButton
+              onClick={handleBlockToggle}
+              variant="secondary"
               className="px-4 py-3 w-full md:w-auto text-[10px] md:text-xs flex items-center justify-center text-center leading-snug !text-red-500 hover:!text-red-400"
             >
               [ {user.is_active ? 'BLOCK' : 'UNBLOCK'} ]
             </PixelButton>
-            <PixelButton 
-              onClick={() => navigate(`/admin/users/${user.id}`)} 
-              variant="primary" 
+            <PixelButton
+              onClick={() => navigate(`/admin/users/${user.id}`)}
+              variant="primary"
               className="text-[10px] md:text-xs px-4 py-3 w-full md:w-auto text-center"
             >
               [ UPDATE ]
@@ -86,10 +86,10 @@ function UserCard({ user, onRefresh }) {
             <p className="text-white text-xs text-center mb-6 leading-relaxed">
               {errorModal}
             </p>
-            <PixelButton 
-              type="button" 
-              variant="secondary" 
-              onClick={() => setErrorModal('')} 
+            <PixelButton
+              type="button"
+              variant="secondary"
+              onClick={() => setErrorModal('')}
               className="py-3 w-full text-xs flex items-center justify-center"
             >
               [ DISMISS ]
@@ -142,10 +142,10 @@ export default function AdminDashboard() {
 
         {/* Find Bar */}
         <div className="mb-8 w-full max-w-md mx-auto">
-          <PixelInput 
+          <PixelInput
             label="DATABASE SEARCH:"
-            type="text" 
-            placeholder="Search by ID, Name, or Email..." 
+            type="text"
+            placeholder="Search by ID, Name, or Email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
