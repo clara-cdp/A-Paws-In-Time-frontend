@@ -1,8 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
-import bgImg from '../assets/assets/images/bg_img.png';
-
 export default function MainLayout() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
@@ -12,7 +10,7 @@ export default function MainLayout() {
       {/* Background layer */}
       <div className="fixed inset-0 z-0">
         {!isAdminRoute && (
-          <img src={bgImg} alt="Background" className="w-full h-full object-cover opacity-60" />
+          <img src="/assets/images/bg_img.png" alt="Background" className="w-full h-full object-cover opacity-60" />
         )}
         {/* Retro Scanline Overlay */}
         <div className="absolute inset-0 scanlines pointer-events-none opacity-80"></div>

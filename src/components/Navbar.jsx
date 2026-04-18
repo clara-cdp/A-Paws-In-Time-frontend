@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-import logicoBadge from '../assets/assets/images/APIT_logico.png';
 
 export default function Navbar() {
   const { isAuthenticated, isAdmin, logout } = useAuth();
@@ -16,7 +15,7 @@ export default function Navbar() {
     border-[#94a3b8] shadow-[0_4px_0_0_rgba(0,0,0,0.8)] z-50">
 
       <div className="flex items-center">
-        <img src={logicoBadge} alt="badge" className="h-20 w-auto mr-4" />
+        <img src="/assets/images/APIT_logico.png" alt="badge" className="h-20 w-auto mr-4" />
       </div>
 
       <div className="flex items-center gap-4 text-[10px] md:text-xs uppercase">

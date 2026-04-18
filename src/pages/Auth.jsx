@@ -8,8 +8,6 @@ import PixelBox from '../components/ui/PixelBox';
 import PixelInput from '../components/ui/PixelInput';
 import PixelButton from '../components/ui/PixelButton';
 
-import logoTransp from '../assets/assets/images/APIT_logo_transp.png';
-
 export default function Auth() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -83,7 +81,7 @@ export default function Auth() {
         {/* Main Logo */}
         <div className="flex justify-center mb-8">
           <img
-            src={logoTransp}
+            src="/assets/images/APIT_logo_transp.png"
             alt="A Paws In Time Logo"
             className="w-max md:w-max drop-shadow-md"
           />
