@@ -29,7 +29,7 @@ api.interceptors.response.use(
       // Auto-logout if token is expired/invalid
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // EITHER: window.location.href = '/auth'; OR handle via React Context changes
+      window.dispatchEvent(new Event('auth:changed'));
     }
     return Promise.reject(error);
   }

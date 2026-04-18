@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useState } from 'react';
+import { useAuth } from '../context/useAuth';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,14 +23,6 @@ export default function Profile() {
   // Delete modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteError, setDeleteError] = useState('');
-
-  // Sync state if user context updates
-  useEffect(() => {
-    if (user) {
-      setName(user.name || '');
-      setEmail(user.email || '');
-    }
-  }, [user]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();

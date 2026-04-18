@@ -28,25 +28,25 @@ export default function AdminUserDetail() {
   const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
-    fetchUser();
+    const loadUser = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/admin/users/${id}`);
+        const userData = response.data.user || response.data;
+
+        const incomingRole = (typeof userData.role === 'string' && userData.role.toLowerCase() === 'admin') ? 'Admin' : 'User';
+        setRole(incomingRole);
+        setUserProfile(userData);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load user. They may not exist.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
   }, [id]);
-
-  const fetchUser = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get(`/admin/users/${id}`);
-      const userData = response.data.user || response.data;
-
-      const incomingRole = (typeof userData.role === 'string' && userData.role.toLowerCase() === 'admin') ? 'Admin' : 'User';
-      setRole(incomingRole);
-      setUserProfile(userData);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load user. They may not exist.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();

@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 export default function ProtectedRoute({ requireAdmin = false }) {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -9,7 +9,7 @@ export default function ProtectedRoute({ requireAdmin = false }) {
   }
 
   if (requireAdmin && !isAdmin) {
-    return <Navigate to="/profile" replace />; // Or return a "Not Authorized" component
+    return <Navigate to="/profile" replace />;
   }
 
   return <Outlet />;

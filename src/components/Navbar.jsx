@@ -1,5 +1,5 @@
-import { Link, NavLink } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { NavLink } from 'react-router-dom';
+import { useAuth } from '../context/useAuth';
 import logicoBadge from '../assets/assets/images/APIT_logico.png';
 
 export default function Navbar() {

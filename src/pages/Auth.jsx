@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 
@@ -8,8 +8,6 @@ import PixelBox from '../components/ui/PixelBox';
 import PixelInput from '../components/ui/PixelInput';
 import PixelButton from '../components/ui/PixelButton';
 
-// Assets
-import faviconSvg from '../assets/assets/images/favicon.svg';
 import logoTransp from '../assets/assets/images/APIT_logo_transp.png';
 
 export default function Auth() {
@@ -45,7 +43,7 @@ export default function Auth() {
       }
       const hasMixedCase = /[a-z]/.test(password) && /[A-Z]/.test(password);
       const hasNumbers = /\d/.test(password);
-      const hasSymbols = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+      const hasSymbols = /[^A-Za-z0-9]/.test(password);
 
       if (!hasMixedCase || !hasNumbers || !hasSymbols) {
         setError("Pass needs upper, lower, numbers, symbols.");
