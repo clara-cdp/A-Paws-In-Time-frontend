@@ -14,13 +14,10 @@ export default function GameRoom() {
   const [musicEnabled, setMusicEnabled] = useState(true);
   const [activeAction, setActiveAction] = useState('LOOK AT');
   const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedTarget, setSelectedTarget] = useState(null);
-  const [hoveredTarget, setHoveredTarget] = useState(null);
   const [game, setGame] = useState(null);
-  const [message, setMessage] = useState('Loading room...');
+  const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isActing, setIsActing] = useState(false);
-  const [loadError, setLoadError] = useState('');
 
   const roomItems = useMemo(() => game?.current_room?.items ?? [], [game]);
   const verbs = FALLBACK_VERBS;
@@ -34,7 +31,6 @@ export default function GameRoom() {
       }
 
       setIsLoading(true);
-      setLoadError('');
 
       try {
         const gameResponse = await api.get(`/games/${id}`);
@@ -44,22 +40,16 @@ export default function GameRoom() {
         }
 
         const nextGame = gameResponse.data?.game;
-        const isIntroRoom = nextGame?.current_room?.name === 'Intro';
         setGame(nextGame);
         setSelectedItem(null);
-        setSelectedTarget(null);
-        setHoveredTarget(null);
-        setMessage(`Entered ${nextGame?.current_room?.name || 'room'}.`);
-        setActiveAction((current) => (isIntroRoom ? 'GO TO' : current));
+        setMessage('');
       } catch (error) {
         if (ignore) {
           return;
         }
 
         console.error(error);
-        const nextError = error.response?.data?.message || 'Unable to load this save.';
-        setLoadError(nextError);
-        setMessage(nextError);
+        setMessage(error.response?.data?.message || 'Unable to load this save.');
       } finally {
         if (!ignore) {
           setIsLoading(false);
@@ -74,41 +64,26 @@ export default function GameRoom() {
     };
   }, [id]);
 
-  const commandText = useMemo(() => {
-    if (loadError) {
-      return loadError;
+  useEffect(() => {
+    if (!message) {
+      return undefined;
     }
 
-    if (hoveredTarget) {
-      if (activeAction === 'USE' && selectedItem?.name_id) {
-        return `${activeAction} ${selectedItem.name_id} with ${hoveredTarget.name_id}`;
-      }
+    const timeoutId = window.setTimeout(() => {
+      setMessage('');
+    }, 4500);
 
-      return `${activeAction} ${hoveredTarget.name_id}`;
-    }
-
-    if (message && !selectedTarget && !(activeAction === 'USE' && selectedItem)) {
-      return message;
-    }
-
-    const targetLabel = selectedTarget?.name_id || game?.current_room?.name || '...';
-    const itemLabel = selectedItem?.name_id;
-
-    if (activeAction === 'USE' && itemLabel) {
-      return `${activeAction} ${itemLabel} with ${targetLabel}`;
-    }
-
-    return `${activeAction} ${targetLabel}`;
-  }, [activeAction, game, hoveredTarget, loadError, message, selectedItem, selectedTarget]);
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [message]);
 
   const handleTargetSelect = async (target) => {
     if (!game || !id) {
       return;
     }
 
-    setSelectedTarget(target);
     setMessage('');
-    setLoadError('');
 
     try {
       setIsActing(true);
@@ -124,20 +99,13 @@ export default function GameRoom() {
       const response = await api.post(`/games/${id}/actions`, payload);
       const refreshResponse = await api.get(`/games/${id}`);
       const nextGame = refreshResponse.data?.game ?? response.data?.game;
-      const isIntroRoom = nextGame?.current_room?.name === 'Intro';
 
       setGame(nextGame);
-      setMessage(response.data?.message || 'Action complete.');
+      setMessage(response.data?.message || '');
       setSelectedItem(null);
-      setSelectedTarget(null);
-      setHoveredTarget(null);
-      if (isIntroRoom) {
-        setActiveAction('GO TO');
-      }
     } catch (error) {
       console.error(error);
       setMessage(error.response?.data?.message || 'That action failed.');
-      setSelectedTarget(null);
     } finally {
       setIsActing(false);
     }
@@ -145,26 +113,18 @@ export default function GameRoom() {
 
   const handleSelectItem = (item) => {
     setSelectedItem((current) => (current?.id === item.id ? null : item));
-    setSelectedTarget(null);
-    setHoveredTarget(null);
-    setMessage('');
   };
 
   return (
     <div className="min-h-screen w-full bg-[#050108] px-2 py-3 text-white md:px-4 md:py-4">
       <div className="mx-auto w-full max-w-6xl">
-        <div className="mb-2 flex items-center justify-between px-1 text-[9px] uppercase tracking-[0.24em] text-[#9fa0d3] md:mb-3 md:text-[10px]">
-          <span>A Paws In Time</span>
-          <span>Session {id}</span>
-        </div>
 
         <div className="overflow-hidden border-[6px] border-[#221008] bg-[#09020d] shadow-[0_0_0_4px_#000,0_18px_40px_rgba(0,0,0,0.55)]">
           <PlayRoom
             room={game?.current_room}
             roomItems={roomItems}
-            commandText={commandText}
+            messageText={message}
             onTargetSelect={handleTargetSelect}
-            onTargetHover={setHoveredTarget}
             isBusy={isLoading || isActing}
           />
 
@@ -175,9 +135,6 @@ export default function GameRoom() {
               onSelectAction={(verb) => {
                 setActiveAction(verb);
                 setSelectedItem(null);
-                setSelectedTarget(null);
-                setHoveredTarget(null);
-                setMessage('');
               }}
             />
             <PocketItems

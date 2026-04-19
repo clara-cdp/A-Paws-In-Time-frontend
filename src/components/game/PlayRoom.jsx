@@ -11,14 +11,14 @@ function normalizeAssetPath(path) {
 export default function PlayRoom({
   room,
   roomItems,
-  commandText,
+  messageText,
   onTargetSelect,
-  onTargetHover,
   isBusy,
 }) {
   const frameRef = useRef(null);
   const mapRef = useRef(null);
   const resizeObserverRef = useRef(null);
+  const viewportKeyRef = useRef(null);
   const dragStateRef = useRef({
     isDragging: false,
     startX: 0,
@@ -39,6 +39,7 @@ export default function PlayRoom({
   });
 
   const layoutType = room?.layout_type ?? 'all';
+  const viewportKey = `${room?.id ?? 'none'}:${room?.image_url ?? ''}:${layoutType}`;
   const roomItemById = useMemo(
     () => new Map(roomItems.map((item) => [String(item.id), item])),
     [roomItems]
@@ -181,7 +182,7 @@ export default function PlayRoom({
       });
     };
 
-    const calculateSize = () => {
+    const calculateSize = (shouldRecenter = false) => {
       const viewBox = svgElement.viewBox?.baseVal;
       const originalWidth = viewBox?.width || 3000;
       const originalHeight = viewBox?.height || 2000;
@@ -200,8 +201,11 @@ export default function PlayRoom({
         state.height = Math.max(frameHeight, originalHeight);
       }
 
-      state.x = (frameWidth - state.width) / 2;
-      state.y = (frameHeight - state.height) / 2;
+      if (shouldRecenter) {
+        state.x = (frameWidth - state.width) / 2;
+        state.y = (frameHeight - state.height) / 2;
+      }
+
       clampAndCommit();
     };
 
@@ -242,10 +246,13 @@ export default function PlayRoom({
       state.startY = event.clientY;
     };
 
-    calculateSize();
+    const shouldRecenter = viewportKeyRef.current !== viewportKey;
+
+    calculateSize(shouldRecenter);
+    viewportKeyRef.current = viewportKey;
 
     resizeObserverRef.current?.disconnect();
-    resizeObserverRef.current = new ResizeObserver(calculateSize);
+    resizeObserverRef.current = new ResizeObserver(() => calculateSize(false));
     resizeObserverRef.current.observe(frameElement);
 
     frameElement.addEventListener('pointerdown', handlePointerDown);
@@ -260,7 +267,7 @@ export default function PlayRoom({
       window.removeEventListener('pointerup', handlePointerUp);
       window.removeEventListener('pointercancel', handlePointerUp);
     };
-  }, [layoutType, processedSvgMarkup]);
+  }, [layoutType, processedSvgMarkup, viewportKey]);
 
   useEffect(() => {
     if (!mapRef.current) {
@@ -283,39 +290,6 @@ export default function PlayRoom({
       return roomItemId ? roomItemById.get(roomItemId) ?? null : null;
     };
 
-    const handlePointerOver = (event) => {
-      const roomItem = getRoomItemFromEvent(event);
-      if (roomItem) {
-        onTargetHover?.(roomItem);
-      }
-    };
-
-    const handlePointerOut = (event) => {
-      if (!(event.target instanceof Element)) {
-        return;
-      }
-
-      const currentItemElement = event.target.closest('[data-room-item-id]');
-      if (!currentItemElement) {
-        return;
-      }
-
-      const nextItemElement =
-        event.relatedTarget instanceof Element
-          ? event.relatedTarget.closest('[data-room-item-id]')
-          : null;
-
-      if (nextItemElement === currentItemElement) {
-        return;
-      }
-
-      onTargetHover?.(null);
-    };
-
-    const handlePointerLeave = () => {
-      onTargetHover?.(null);
-    };
-
     const handlePointerDown = (event) => {
       if (!getRoomItemFromEvent(event)) {
         return;
@@ -335,20 +309,14 @@ export default function PlayRoom({
       onTargetSelect?.(roomItem);
     };
 
-    mapElement.addEventListener('pointerover', handlePointerOver);
-    mapElement.addEventListener('pointerout', handlePointerOut);
-    mapElement.addEventListener('pointerleave', handlePointerLeave);
     mapElement.addEventListener('pointerdown', handlePointerDown);
     mapElement.addEventListener('click', handleClick);
 
     return () => {
-      mapElement.removeEventListener('pointerover', handlePointerOver);
-      mapElement.removeEventListener('pointerout', handlePointerOut);
-      mapElement.removeEventListener('pointerleave', handlePointerLeave);
       mapElement.removeEventListener('pointerdown', handlePointerDown);
       mapElement.removeEventListener('click', handleClick);
     };
-  }, [isBusy, onTargetHover, onTargetSelect, processedSvgMarkup, roomItemById]);
+  }, [isBusy, onTargetSelect, processedSvgMarkup, roomItemById]);
 
   return (
     <section className="overflow-hidden border-[5px] border-[#7a5a2e] bg-black shadow-[0_0_0_4px_#221208]">
@@ -402,8 +370,8 @@ export default function PlayRoom({
         )}
       </div>
 
-      <div className="border-t-[5px] border-[#7a5a2e] bg-[#100713] px-3 py-2 text-center text-[10px] text-[#6f8ff7] md:px-4 md:text-xs">
-        {commandText}
+      <div className="min-h-[36px] border-t-[5px] border-[#7a5a2e] bg-[#100713] px-3 py-2 text-center text-[10px] text-[#6f8ff7] md:min-h-[42px] md:px-4 md:text-xs">
+        {messageText}
       </div>
     </section>
   );
