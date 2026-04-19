@@ -6,8 +6,8 @@ export default function ActionVerbMenu({
   onSelectAction,
 }) {
   return (
-    <section className="border-[5px] border-[#23101f] bg-[#130515] p-3 shadow-[0_0_0_4px_#050207] md:p-4">
-      <div className="grid grid-cols-2 gap-x-3 gap-y-2 md:gap-x-4 md:gap-y-3">
+    <section className="action-verb-menu h-full border-[4px] border-[#94a3b8] bg-[#0f172a] p-2.5 shadow-[0_4px_0_0_rgba(0,0,0,0.8)] md:p-3">
+      <div className="action-verb-grid grid grid-cols-2 gap-x-2.5 gap-y-1.5 md:gap-x-3 md:gap-y-2">
         {actions.map((action) => {
           const isActive = action === activeAction;
 
@@ -16,9 +16,8 @@ export default function ActionVerbMenu({
               key={action}
               type="button"
               onClick={() => onSelectAction?.(action)}
-              className={`text-left text-sm uppercase leading-none md:text-[22px] ${
-                isActive ? 'text-[#6cb5ff]' : 'text-[#b13fd5] hover:text-[#ff92f2]'
-              }`}
+              className={`action-verb-button text-left text-[10px] uppercase leading-none transition md:text-[15px] lg:text-[16px] ${isActive ? 'action-verb-button-active text-[#2dd4bf]' : 'action-verb-button-idle text-[#e2e8f0] hover:text-[#fcd34d]'
+                }`}
             >
               {action}
             </button>

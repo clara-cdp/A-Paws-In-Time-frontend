@@ -319,7 +319,7 @@ export default function PlayRoom({
   }, [isBusy, onTargetSelect, processedSvgMarkup, roomItemById]);
 
   return (
-    <section className="overflow-hidden border-[5px] border-[#7a5a2e] bg-black shadow-[0_0_0_4px_#221208]">
+    <section className="play-room-panel grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] overflow-hidden border-[4px] border-[#94a3b8] bg-black shadow-[0_4px_0_0_rgba(0,0,0,0.8)]">
       <style>{`
         .playroom-map [data-room-visible="false"] {
           display: none !important;
@@ -333,17 +333,17 @@ export default function PlayRoom({
           visibility: visible;
         }
       `}</style>
-      <div
+        <div
         ref={frameRef}
-        className={`relative aspect-[16/10] min-h-[260px] overflow-hidden bg-black md:min-h-[420px] ${
+        className={`play-room-viewport relative min-h-0 overflow-hidden bg-black ${
           isDragging ? 'cursor-grabbing' : 'cursor-grab'
         }`}
       >
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(11,6,2,0.14)_65%,rgba(0,0,0,0.3))]" />
-        <div className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(255,219,102,0.12)_1px,transparent_1px)] [background-size:100%_4px]" />
+        <div className="play-room-light-overlay absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(11,6,2,0.14)_65%,rgba(0,0,0,0.3))]" />
+        <div className="play-room-scanlines absolute inset-0 opacity-[0.14] [background-image:linear-gradient(rgba(148,163,184,0.12)_1px,transparent_1px)] [background-size:100%_4px]" />
 
         {room && (
-          <div className="absolute left-3 top-3 z-20 border-2 border-[#f2cb69] bg-[#261507]/90 px-2 py-1 text-[9px] uppercase tracking-[0.24em] text-[#f7e1a6] md:left-4 md:top-4">
+          <div className="play-room-title absolute left-3 top-3 z-20 border-[3px] border-[#94a3b8] bg-[#0f172a]/95 px-2.5 py-1 text-[10px] uppercase tracking-[0.24em] text-[#fcd34d] md:left-4 md:top-4 md:text-[11px]">
             {room.name}
           </div>
         )}
@@ -351,26 +351,26 @@ export default function PlayRoom({
         {processedSvgMarkup && (
           <div
             ref={mapRef}
-            className="playroom-map absolute left-0 top-0 select-none touch-none [&>svg]:h-full [&>svg]:w-full"
+            className="play-room-map playroom-map absolute left-0 top-0 select-none touch-none [&>svg]:h-full [&>svg]:w-full"
             style={transformStyle}
             dangerouslySetInnerHTML={{ __html: processedSvgMarkup }}
           />
         )}
 
         {!svgMarkup && !loadError && (
-          <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-[10px] uppercase tracking-[0.24em] text-[#f7e1a6] md:text-xs">
+          <div className="play-room-loading absolute inset-0 flex items-center justify-center px-6 text-center text-[10px] uppercase tracking-[0.24em] text-[#fcd34d] md:text-xs">
             Loading room...
           </div>
         )}
 
         {loadError && (
-          <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-[10px] uppercase tracking-[0.2em] text-red-300 md:text-xs">
+          <div className="play-room-error absolute inset-0 flex items-center justify-center px-6 text-center text-[10px] uppercase tracking-[0.2em] text-red-300 md:text-xs">
             {loadError}
           </div>
         )}
       </div>
 
-      <div className="min-h-[36px] border-t-[5px] border-[#7a5a2e] bg-[#100713] px-3 py-2 text-center text-[10px] text-[#6f8ff7] md:min-h-[42px] md:px-4 md:text-xs">
+      <div className="play-room-message min-h-[36px] border-t-[4px] border-[#94a3b8] bg-[#0f172a] px-3 py-2 text-center text-[10px] text-[#2dd4bf] md:min-h-[42px] md:px-4 md:text-xs">
         {messageText}
       </div>
     </section>

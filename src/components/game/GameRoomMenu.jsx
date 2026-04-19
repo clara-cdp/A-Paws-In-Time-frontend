@@ -1,28 +1,29 @@
-export default function GameRoomMenu({ musicEnabled, onToggleMusic, onQuit }) {
+import useGameMusic from '../../hooks/useGameMusic';
+
+export default function GameRoomMenu({ onQuit }) {
+  const { musicEnabled, toggleMusic } = useGameMusic();
+
   return (
-    <section className="border-[5px] border-[#23101f] bg-[#130515] p-3 shadow-[0_0_0_4px_#050207] md:p-4">
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
-        <button
-          type="button"
-          onClick={onQuit}
-          className="border-[3px] border-[#4e335f] bg-[#14071f] px-3 py-3 text-[10px] uppercase text-[#c79cff] transition hover:bg-[#2b0a21] hover:text-[#ffb3c0] md:text-xs"
-        >
-          Quit
-        </button>
-        <button
-          type="button"
-          onClick={onToggleMusic}
-          aria-pressed={musicEnabled}
-          className={`border-[3px] px-3 py-3 text-[10px] uppercase transition md:text-xs ${musicEnabled
-              ? 'border-[#5d8cf5] bg-[#142469] text-[#dbe7ff] hover:bg-[#1c3290]'
-              : 'border-[#4e335f] bg-[#14071f] text-[#c79cff] hover:bg-[#251129]'
-            }`}
-        >
-          Music {musicEnabled ? 'On' : 'Off'}
-        </button>
-      </div>
-    </section>
+    <div className="game-room-menu grid h-full w-full grid-cols-1 gap-1 border-[3px] border-[#94a3b8] bg-[#0f172a] p-1 shadow-[0_4px_0_0_rgba(0,0,0,0.8)] sm:grid-cols-2 lg:grid-cols-1">
+      <button
+        type="button"
+        onClick={onQuit}
+        className="whitespace-nowrap game-room-menu-button game-room-menu-quit flex w-full items-center justify-center bg-[#1e293b] px-2.5 py-1.5 text-[9px] uppercase tracking-[0.16em] text-[#e2e8f0] transition hover:bg-[#334155] hover:text-[#fcd34d] md:px-3 md:text-[9px]"
+      >
+        [{'\u00A0'}Quit{'\u00A0'}]
+      </button>
+      <button
+        type="button"
+        onClick={toggleMusic}
+        aria-pressed={musicEnabled}
+        className={`game-room-menu-button game-room-menu-music flex w-full items-center justify-center px-2.5 py-1.5 
+          text-[8px] uppercase tracking-[0.16em] transition md:px-3 md:text-[9px] ${musicEnabled
+            ? 'game-room-menu-music-on bg-[#0f766e] text-[#ecfeff] hover:bg-[#0d9488]'
+            : 'game-room-menu-music-off bg-[#1e293b] text-[#cbd5e1] hover:bg-[#334155] hover:text-[#fcd34d]'
+          }`}
+      >
+        Music [{'\u00A0'}{musicEnabled ? 'On' : 'Off'}{'\u00A0'}]
+      </button>
+    </div>
   );
 }
-
-//this will be a small pill on the top right on small devices

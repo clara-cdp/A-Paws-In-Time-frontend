@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api/axios';
 import PlayRoom from '../components/game/PlayRoom';
@@ -7,93 +7,19 @@ import PocketItems from '../components/game/PocketItems';
 import GameRoomMenu from '../components/game/GameRoomMenu';
 
 const FALLBACK_VERBS = ['LOOK AT', 'USE', 'PICK UP', 'GO TO', 'OPEN', 'RESCUE', 'PULL', 'PUSH'];
-const AUDIO_TRACKS = [
-  '/assets/audio/track_1.mp3',
-  '/assets/audio/track_2.mp3',
-  '/assets/audio/track_3.mp3',
-  '/assets/audio/track_5.mp3',
-];
 
 export default function GameRoom() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [musicEnabled, setMusicEnabled] = useState(true);
   const [activeAction, setActiveAction] = useState('LOOK AT');
   const [selectedItem, setSelectedItem] = useState(null);
   const [game, setGame] = useState(null);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isActing, setIsActing] = useState(false);
-  const audioRef = useRef(null);
-  const trackIndexRef = useRef(0);
-  const musicEnabledRef = useRef(musicEnabled);
 
   const roomItems = useMemo(() => game?.current_room?.items ?? [], [game]);
   const verbs = FALLBACK_VERBS;
-
-  useEffect(() => {
-    musicEnabledRef.current = musicEnabled;
-  }, [musicEnabled]);
-
-  useEffect(() => {
-    const audio = new Audio(AUDIO_TRACKS[0]);
-    audio.preload = 'auto';
-    audio.loop = false;
-    audio.volume = 0.38;
-
-    const handleTrackEnd = () => {
-      trackIndexRef.current = (trackIndexRef.current + 1) % AUDIO_TRACKS.length;
-      audio.src = AUDIO_TRACKS[trackIndexRef.current];
-      audio.load();
-
-      if (musicEnabledRef.current) {
-        audio.play().catch(() => {});
-      }
-    };
-
-    audio.addEventListener('ended', handleTrackEnd);
-    audioRef.current = audio;
-
-    return () => {
-      audio.pause();
-      audio.removeEventListener('ended', handleTrackEnd);
-      audioRef.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) {
-      return undefined;
-    }
-
-    if (!musicEnabled) {
-      audio.pause();
-      return undefined;
-    }
-
-    audio.play().catch(() => {});
-    return undefined;
-  }, [musicEnabled]);
-
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      const audio = audioRef.current;
-      if (!audio || !musicEnabled) {
-        return;
-      }
-
-      audio.play().catch(() => {});
-    };
-
-    window.addEventListener('pointerdown', handleFirstInteraction, { passive: true });
-    window.addEventListener('keydown', handleFirstInteraction);
-
-    return () => {
-      window.removeEventListener('pointerdown', handleFirstInteraction);
-      window.removeEventListener('keydown', handleFirstInteraction);
-    };
-  }, [musicEnabled]);
 
   useEffect(() => {
     let ignore = false;
@@ -198,10 +124,9 @@ export default function GameRoom() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#050108] px-2 py-3 text-white md:px-4 md:py-4">
-      <div className="mx-auto w-full max-w-6xl">
-
-        <div className="overflow-hidden border-[6px] border-[#221008] bg-[#09020d] shadow-[0_0_0_4px_#000,0_18px_40px_rgba(0,0,0,0.55)]">
+    <main className="game-room-page min-h-screen w-full bg-[#000000] px-2 py-3 text-white md:px-4 md:py-4">
+      <div className="game-room-layout w-full">
+        <section className="game-room-shell relative grid h-[calc(100vh-1.5rem)] w-full min-h-0 grid-rows-[minmax(0,7fr)_minmax(0,3fr)] overflow-hidden border-[4px] border-[#94a3b8] bg-[#020617] shadow-[0_6px_0_0_rgba(0,0,0,0.85)] md:h-[calc(100vh-2rem)] lg:grid-rows-[minmax(0,8fr)_minmax(0,2fr)]">
           <PlayRoom
             room={game?.current_room}
             roomItems={roomItems}
@@ -210,29 +135,31 @@ export default function GameRoom() {
             isBusy={isLoading || isActing}
           />
 
-          <div className="grid gap-[5px] border-t-[5px] border-[#221008] bg-[#050108] p-[5px] lg:grid-cols-[1.15fr_1.45fr_0.7fr]">
-            <ActionVerbMenu
-              actions={verbs}
-              activeAction={activeAction}
-              onSelectAction={(verb) => {
-                setActiveAction(verb);
-                setSelectedItem(null);
-              }}
-            />
-            <PocketItems
-              items={game?.pocket ?? []}
-              selectedItemId={selectedItem?.id}
-              onSelectItem={handleSelectItem}
-              isBusy={isLoading || isActing}
-            />
-            <GameRoomMenu
-              musicEnabled={musicEnabled}
-              onToggleMusic={() => setMusicEnabled((current) => !current)}
-              onQuit={() => navigate('/games')}
-            />
+          <div className="game-room-bottom-bar grid min-h-0 gap-[5px] border-t-[4px] border-[#94a3b8] bg-[#020617] p-[5px] lg:grid-cols-[1.05fr_1.95fr]">
+            <div className="game-room-action-column grid min-h-0 grid-cols-[minmax(0,7fr)_minmax(0,3fr)] items-stretch gap-[5px] lg:grid-cols-1">
+              <ActionVerbMenu
+                actions={verbs}
+                activeAction={activeAction}
+                onSelectAction={(verb) => {
+                  setActiveAction(verb);
+                  setSelectedItem(null);
+                }}
+              />
+              <GameRoomMenu onQuit={() => navigate('/games')} />
+            </div>
+
+            <div className="game-room-pocket-column min-h-0">
+              <PocketItems
+                avatarName={game?.avatar ?? 'Player'}
+                items={game?.pocket ?? []}
+                selectedItemId={selectedItem?.id}
+                onSelectItem={handleSelectItem}
+                isBusy={isLoading || isActing}
+              />
+            </div>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
