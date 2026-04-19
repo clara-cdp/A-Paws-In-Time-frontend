@@ -112,6 +112,15 @@ export default function GameRoom() {
   };
 
   const handleSelectItem = (item) => {
+    if (isLoading || isActing) {
+      return;
+    }
+
+    if (activeAction === 'LOOK AT') {
+      handleTargetSelect(item);
+      return;
+    }
+
     setSelectedItem((current) => (current?.id === item.id ? null : item));
   };
 
@@ -141,6 +150,7 @@ export default function GameRoom() {
               items={game?.pocket ?? []}
               selectedItemId={selectedItem?.id}
               onSelectItem={handleSelectItem}
+              isBusy={isLoading || isActing}
             />
             <GameRoomMenu
               musicEnabled={musicEnabled}

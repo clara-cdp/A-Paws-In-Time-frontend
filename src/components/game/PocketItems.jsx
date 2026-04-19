@@ -6,7 +6,7 @@ function normalizeAssetPath(path) {
   return path.startsWith('/') ? path : `/${path}`;
 }
 
-export default function PocketItems({ items = [], selectedItemId, onSelectItem }) {
+export default function PocketItems({ items = [], selectedItemId, onSelectItem, isBusy = false }) {
   return (
     <section className="border-[5px] border-[#23101f] bg-[#130515] p-3 shadow-[0_0_0_4px_#050207] md:p-4">
       <div className="mb-3 flex items-center justify-between text-[10px] uppercase md:mb-4">
@@ -23,8 +23,9 @@ export default function PocketItems({ items = [], selectedItemId, onSelectItem }
               <button
                 key={item.id}
                 type="button"
+                disabled={isBusy}
                 onClick={() => onSelectItem?.(item)}
-                className={`flex min-h-20 flex-col items-center justify-center border-[3px] px-2 py-3 transition md:min-h-24 ${
+                className={`flex min-h-20 flex-col items-center justify-center border-[3px] px-2 py-3 transition disabled:cursor-progress disabled:opacity-70 md:min-h-24 ${
                   isSelected
                     ? 'border-[#8ec6ff] bg-[#2530a6]'
                     : 'border-[#30214d] bg-[#09020d] hover:border-[#6e52a6] hover:bg-[#1a0720]'
