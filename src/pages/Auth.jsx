@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 
@@ -7,10 +7,6 @@ import api from '../api/axios';
 import PixelBox from '../components/ui/PixelBox';
 import PixelInput from '../components/ui/PixelInput';
 import PixelButton from '../components/ui/PixelButton';
-
-// Assets
-import faviconSvg from '../assets/assets/images/favicon.svg';
-import logoTransp from '../assets/assets/images/APIT_logo_transp.png';
 
 export default function Auth() {
   const { login } = useAuth();
@@ -45,7 +41,7 @@ export default function Auth() {
       }
       const hasMixedCase = /[a-z]/.test(password) && /[A-Z]/.test(password);
       const hasNumbers = /\d/.test(password);
-      const hasSymbols = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+      const hasSymbols = /[^A-Za-z0-9]/.test(password);
 
       if (!hasMixedCase || !hasNumbers || !hasSymbols) {
         setError("Pass needs upper, lower, numbers, symbols.");
@@ -77,22 +73,22 @@ export default function Auth() {
   };
 
   return (
-    <div className="w-full max-w-3xl flex flex-col items-center">
+    <div className="flex h-full max-h-[calc(100vh-2rem)] w-full max-w-3xl flex-col items-center justify-center overflow-hidden">
 
       {/* UI Box */}
-      <PixelBox className="w-full max-w-lg p-6 md:p-8 relative">
+      <PixelBox className="relative flex h-[90vh] max-h-[90vh] w-full max-w-lg flex-col overflow-hidden p-4 md:p-6">
 
         {/* Main Logo */}
-        <div className="flex justify-center mb-8">
+        <div className="flex min-h-0 flex-1 items-center justify-center py-3 md:py-4">
           <img
-            src={logoTransp}
+            src="/assets/images/APIT_logo_transp.png"
             alt="A Paws In Time Logo"
-            className="w-max md:w-max drop-shadow-md"
+            className="max-h-[24vh] w-auto max-w-full drop-shadow-md md:max-h-[28vh] lg:max-h-[30vh]"
           />
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-xs md:text-sm">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-xs md:gap-4 md:text-sm">
 
           {error && (
             <div className="bg-red-900 border-4 border-red-500 text-white p-3 text-center blink animate-pulse">
@@ -142,7 +138,7 @@ export default function Auth() {
             />
           )}
 
-          <div className="mt-6 flex flex-col md:flex-row gap-4 items-stretch justify-between">
+          <div className="mt-4 flex flex-col gap-3 items-stretch justify-between md:mt-5 md:flex-row md:gap-4">
             <PixelButton type="submit" variant="primary" className="px-6 py-4 w-full md:w-1/2 text-sm flex items-center justify-center text-center">
               [ START ]
             </PixelButton>
@@ -162,9 +158,6 @@ export default function Auth() {
           </div>
         </form>
       </PixelBox>
-      <div className="mt-8 text-neutral-600 text-xs text-center pt-4 w-full opacity-50">
-        [ SYSTEM READY ]
-      </div>
     </div>
   )
 }

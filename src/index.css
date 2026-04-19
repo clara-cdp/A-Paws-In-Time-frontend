@@ -19,17 +19,14 @@ body {
 }
 
 .pixel-btn {
-  background-color: #7c3aed;
-  border: 4px solid #fff;
   box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
   color: #fff;
   text-transform: uppercase;
   transition: all 0.1s;
+  border: 4px solid transparent;
 }
 
 .pixel-btn:hover {
-  background-color: #2dd4bf;
-  color: #000;
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
 }
@@ -39,20 +36,50 @@ body {
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
 }
 
-.pixel-btn-secondary {
-  background-color: #3f3f46;
-  border: 4px solid #a1a1aa;
+.pixel-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+.pixel-btn:disabled:hover,
+.pixel-btn:disabled:active {
+  transform: none;
   box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
-  color: #fff;
-  text-transform: uppercase;
-  transition: all 0.1s;
+}
+
+.pixel-btn-primary {
+  background-color: #0f766e;
+  border-color: #99f6e4;
+  color: #ecfeff;
+}
+
+.pixel-btn-primary:hover {
+  background-color: #2dd4bf;
+  color: #000000;
+}
+
+.pixel-btn-secondary {
+  background-color: #7c3aed;
+  border-color: #d8b4fe;
+  color: #f5f3ff;
 }
 
 .pixel-btn-secondary:hover {
-  background-color: #fcd34d;
-  color: #000;
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+  background-color: #8b5cf6;
+  color: #ffffff;
+}
+
+.pixel-btn-danger {
+  background-color: #3f3f46;
+  border-color: #a1a1aa;
+  color: #f4f4f5;
+}
+
+.pixel-btn-danger:hover {
+  background-color: #991b1b;
+  border-color: #f59e0b;
+  color: #fff7ed;
 }
 
 .pixel-input {
@@ -73,32 +100,24 @@ body {
 
 /* Admin Theme Global Overrides */
 .admin-theme {
-  background-color: #020617;
+  background:
+    radial-gradient(circle at top, rgba(45, 212, 191, 0.08), transparent 38%),
+    linear-gradient(180deg, #020617 0%, #020617 45%, #000000 100%);
 }
 
 .admin-theme .pixel-box {
-  background-color: #1e3a8a;
-  border-color: #93c5fd;
+  background-color: #0f172a;
+  border-color: #94a3b8;
   box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.8), inset 4px 4px 0px 0px rgba(255, 255, 255, 0.1);
 }
 
-.admin-theme .pixel-btn {
-  background-color: #2563eb;
-  border-color: #bfdbfe;
-  color: #fff;
-}
-
-.admin-theme .pixel-btn:hover {
-  background-color: #60a5fa;
-  color: #000;
-}
-
 .admin-theme .pixel-input {
-  border-color: #3b82f6;
-  color: #bfdbfe;
+  background-color: #020617;
+  border-color: #475569;
+  color: #e2e8f0;
 }
 
 .admin-theme .pixel-input:focus {
-  border-color: #93c5fd;
+  border-color: #2dd4bf;
   color: #fff;
 }

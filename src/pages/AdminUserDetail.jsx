@@ -28,25 +28,25 @@ export default function AdminUserDetail() {
   const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
-    fetchUser();
+    const loadUser = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/admin/users/${id}`);
+        const userData = response.data.user || response.data;
+
+        const incomingRole = (typeof userData.role === 'string' && userData.role.toLowerCase() === 'admin') ? 'Admin' : 'User';
+        setRole(incomingRole);
+        setUserProfile(userData);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load user. They may not exist.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
   }, [id]);
-
-  const fetchUser = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get(`/admin/users/${id}`);
-      const userData = response.data.user || response.data;
-
-      const incomingRole = (typeof userData.role === 'string' && userData.role.toLowerCase() === 'admin') ? 'Admin' : 'User';
-      setRole(incomingRole);
-      setUserProfile(userData);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load user. They may not exist.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -112,7 +112,7 @@ export default function AdminUserDetail() {
   };
 
   if (loading) {
-    return <div className="text-center text-blue-300 text-xs blink mt-10">LOADING USER DATA...</div>;
+    return <div className="mt-10 text-center text-xs text-[#2dd4bf] blink">LOADING USER DATA...</div>;
   }
 
   return (
@@ -124,23 +124,23 @@ export default function AdminUserDetail() {
       </div>
 
       <PixelBox className="w-full max-w-lg p-6 md:p-8 relative">
-        <h2 className="text-xl md:text-2xl text-center mb-2 text-white uppercase tracking-widest drop-shadow-md">UPDATE USER</h2>
-        <p className="text-center text-gray-400 text-[10px] pb-4 border-b-2 border-blue-900">SYSTEM ID: {id}</p>
+        <h2 className="mb-2 text-center text-xl uppercase tracking-widest text-white drop-shadow-md md:text-2xl">UPDATE USER</h2>
+        <p className="border-b-2 border-[#334155] pb-4 text-center text-[10px] text-[#94a3b8]">SYSTEM ID: {id}</p>
 
         {userProfile && (
-          <div className="bg-[#020617] border-2 border-blue-900 p-4 text-gray-300 text-[10px] md:text-xs flex flex-col gap-2 mt-4 relative">
-            <div className="absolute top-0 right-0 bg-blue-900 text-[8px] px-2 py-1">READ ONLY</div>
-            <p className="tracking-wide">ROLE: <span className="text-[#93c5fd] ml-1">{userProfile.role || 'User'}</span></p>
-            <p className="tracking-wide">STATUS: <span className={userProfile.is_active ? 'text-green-400 ml-1' : 'text-red-400 ml-1'}>{userProfile.is_active ? 'ACTIVE' : 'INACTIVE'}</span></p>
+          <div className="relative mt-4 flex flex-col gap-2 border-2 border-[#475569] bg-[#020617] p-4 text-[10px] text-[#cbd5e1] md:text-xs">
+            <div className="absolute right-0 top-0 bg-[#1e293b] px-2 py-1 text-[8px] text-[#fcd34d]">READ ONLY</div>
+            <p className="tracking-wide">ROLE: <span className="ml-1 text-[#fcd34d]">{userProfile.role || 'User'}</span></p>
+            <p className="tracking-wide">STATUS: <span className={userProfile.is_active ? 'ml-1 text-emerald-400' : 'ml-1 text-red-400'}>{userProfile.is_active ? 'ACTIVE' : 'INACTIVE'}</span></p>
 
             {userProfile.games_count !== undefined && (
-              <p className="tracking-wide">GAMES PLAYED: <span className="text-yellow-400 ml-1">{userProfile.games_count}</span></p>
+              <p className="tracking-wide">GAMES PLAYED: <span className="ml-1 text-[#fcd34d]">{userProfile.games_count}</span></p>
             )}
 
             {userProfile.game_list && userProfile.game_list.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {userProfile.game_list.map((avatar, idx) => (
-                  <span key={idx} className="bg-[#1e3a8a] text-white px-2 py-1 border border-[#3b82f6] rounded-sm">
+                  <span key={idx} className="border border-[#475569] bg-[#1e293b] px-2 py-1 text-[#e2e8f0]">
                     {avatar || 'MissingNo'}
                   </span>
                 ))}
@@ -151,12 +151,12 @@ export default function AdminUserDetail() {
 
         <form onSubmit={handleUpdate} className="flex flex-col gap-4 text-xs md:text-sm">
           {error && (
-            <div className="bg-red-900 border-4 border-red-500 text-white p-3 text-center blink animate-pulse">
+            <div className="border-4 border-red-500 bg-red-950 p-3 text-center text-white blink animate-pulse">
               {error}
             </div>
           )}
           {message && (
-            <div className="bg-emerald-900 border-4 border-emerald-500 text-white p-3 text-center blink animate-pulse">
+            <div className="border-4 border-emerald-500 bg-emerald-950 p-3 text-center text-white blink animate-pulse">
               {message}
             </div>
           )}
@@ -180,7 +180,7 @@ export default function AdminUserDetail() {
           />
 
           <div className="flex flex-col gap-2">
-            <label className="text-teal-300 text-shadow-retro">Role:</label>
+            <label className="text-[#2dd4bf] text-shadow-retro">Role:</label>
             <select
               className="pixel-input p-3 w-full"
               value={role}
@@ -217,7 +217,7 @@ export default function AdminUserDetail() {
 
             <PixelButton
               type="button"
-              variant="secondary"
+              variant="danger"
               onClick={handleOpenDeleteModal}>
 
               [ TERMINATE ]
@@ -253,9 +253,9 @@ export default function AdminUserDetail() {
                 </PixelButton>
                 <PixelButton
                   type="button"
-                  variant="primary"
+                  variant="danger"
                   onClick={executeDelete}
-                  className="py-3 w-full md:w-1/2 text-xs flex items-center justify-center !bg-red-700 hover:!bg-red-600 !border-red-500"
+                  className="py-3 w-full md:w-1/2 text-xs flex items-center justify-center"
                 >
                   [ CONFIRM ]
                 </PixelButton>
@@ -265,7 +265,7 @@ export default function AdminUserDetail() {
         </div>
       )}
 
-      <div className="mt-8 text-[#60a5fa] text-[10px] text-center pt-4 w-full opacity-50">
+      <div className="mt-8 w-full pt-4 text-center text-[10px] text-[#94a3b8] opacity-60">
         [ SYSTEM ROOT ACCESS ]
       </div>
     </div>

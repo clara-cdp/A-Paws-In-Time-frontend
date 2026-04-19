@@ -1,6 +1,5 @@
-import { Link, NavLink } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import logicoBadge from '../assets/assets/images/APIT_logico.png';
+import { NavLink } from 'react-router-dom';
+import { useAuth } from '../context/useAuth';
 
 export default function Navbar() {
   const { isAuthenticated, isAdmin, logout } = useAuth();
@@ -8,7 +7,7 @@ export default function Navbar() {
   const navClass = ({ isActive }) => 
     `hover:text-yellow-300 transition ${isActive ? 'text-teal-400' : ''}`;
 
-  const adminNavClass = ({ isActive }) => 
+  const separatedNavClass = ({ isActive }) => 
     `hover:text-yellow-300 transition border-l-2 border-[#94a3b8] pl-4 ${isActive ? 'text-teal-400' : ''}`;
 
   return (
@@ -16,7 +15,7 @@ export default function Navbar() {
     border-[#94a3b8] shadow-[0_4px_0_0_rgba(0,0,0,0.8)] z-50">
 
       <div className="flex items-center">
-        <img src={logicoBadge} alt="badge" className="h-20 w-auto mr-4" />
+        <img src="/assets/images/APIT_logico.png" alt="badge" className="h-20 w-auto mr-4" />
       </div>
 
       <div className="flex items-center gap-4 text-[10px] md:text-xs uppercase">
@@ -27,12 +26,12 @@ export default function Navbar() {
         {isAuthenticated && (
           <>
             <NavLink to="/profile" className={navClass}>Profile</NavLink>
-            <NavLink to="/games" className={navClass}>Lobby</NavLink>
+            <NavLink to="/games" className={separatedNavClass}>Lobby</NavLink>
           </>
         )}
 
         {isAdmin && (
-          <NavLink to="/admin/users" className={adminNavClass}>Admin</NavLink>
+          <NavLink to="/admin/users" className={separatedNavClass}>Admin</NavLink>
         )}
 
         {isAuthenticated && (
