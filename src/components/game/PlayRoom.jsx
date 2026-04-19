@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 function normalizeAssetPath(path) {
   if (!path) {
@@ -14,7 +14,6 @@ export default function PlayRoom({
   commandText,
   onTargetSelect,
   onTargetHover,
-  activeTargetId,
   isBusy,
 }) {
   const frameRef = useRef(null);
@@ -32,6 +31,7 @@ export default function PlayRoom({
 
   const [svgMarkup, setSvgMarkup] = useState('');
   const [loadError, setLoadError] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
   const [transformStyle, setTransformStyle] = useState({
     width: '100%',
     height: '100%',
@@ -39,6 +39,10 @@ export default function PlayRoom({
   });
 
   const layoutType = room?.layout_type ?? 'all';
+  const roomItemById = useMemo(
+    () => new Map(roomItems.map((item) => [String(item.id), item])),
+    [roomItems]
+  );
 
   useEffect(() => {
     let ignore = false;
@@ -77,8 +81,68 @@ export default function PlayRoom({
     };
   }, [room?.image_url]);
 
+  const processedSvgMarkup = useMemo(() => {
+    if (!svgMarkup) {
+      return '';
+    }
+
+    const parser = new DOMParser();
+    const document = parser.parseFromString(svgMarkup, 'image/svg+xml');
+    const svgElement = document.querySelector('svg');
+
+    if (!svgElement) {
+      return svgMarkup;
+    }
+
+    const roomItemBySlug = new Map(roomItems.map((item) => [item.name_id, item]));
+
+    svgElement.querySelectorAll('[id]').forEach((element) => {
+      const elementId = element.getAttribute('id');
+      if (!elementId) {
+        return;
+      }
+
+      if (elementId === 'bg') {
+        element.removeAttribute('data-room-item-id');
+        element.dataset.roomVisible = 'true';
+        element.style.pointerEvents = 'none';
+        return;
+      }
+
+      const roomItem = roomItemBySlug.get(elementId);
+      const isVisible = Boolean(roomItem?.is_visible);
+
+      if (!roomItem || !isVisible) {
+        element.removeAttribute('data-room-item-id');
+        element.dataset.roomVisible = 'false';
+        element.style.display = 'none';
+        element.style.opacity = '0';
+        element.style.visibility = 'hidden';
+        element.style.pointerEvents = 'none';
+        return;
+      }
+
+      element.dataset.roomVisible = 'true';
+      element.dataset.roomItemId = String(roomItem.id);
+      element.style.display = '';
+      element.style.opacity = '1';
+      element.style.visibility = 'visible';
+      element.style.pointerEvents = isBusy ? 'none' : 'auto';
+      element.style.cursor = isBusy ? 'progress' : 'pointer';
+
+      if (element.tagName.toLowerCase() !== 'image') {
+        const fill = element.getAttribute('fill');
+        if (!fill || fill === 'transparent' || fill === 'none') {
+          element.style.fill = 'rgba(255,255,255,0.001)';
+        }
+      }
+    });
+
+    return new XMLSerializer().serializeToString(svgElement);
+  }, [isBusy, roomItems, svgMarkup]);
+
   useEffect(() => {
-    if (!svgMarkup || !frameRef.current || !mapRef.current) {
+    if (!processedSvgMarkup || !frameRef.current || !mapRef.current) {
       return undefined;
     }
 
@@ -164,14 +228,16 @@ export default function PlayRoom({
 
     const handlePointerUp = () => {
       state.isDragging = false;
+      setIsDragging(false);
     };
 
     const handlePointerDown = (event) => {
-      if (event.target.closest('[data-room-item-id]')) {
+      if (event.target instanceof Element && event.target.closest('[data-room-item-id]')) {
         return;
       }
 
       state.isDragging = true;
+      setIsDragging(true);
       state.startX = event.clientX;
       state.startY = event.clientY;
     };
@@ -194,120 +260,116 @@ export default function PlayRoom({
       window.removeEventListener('pointerup', handlePointerUp);
       window.removeEventListener('pointercancel', handlePointerUp);
     };
-  }, [svgMarkup, layoutType]);
+  }, [layoutType, processedSvgMarkup]);
 
   useEffect(() => {
     if (!mapRef.current) {
-      return;
+      return undefined;
     }
 
-    const svgElement = mapRef.current.querySelector('svg');
-    if (!svgElement) {
-      return;
-    }
+    const mapElement = mapRef.current;
 
-    const itemMap = new Map(roomItems.map((item) => [item.name_id, item]));
-
-    svgElement.querySelectorAll('[id]').forEach((element) => {
-      const item = itemMap.get(element.id);
-      if (!item) {
-        return;
+    const getRoomItemFromEvent = (event) => {
+      if (!(event.target instanceof Element)) {
+        return null;
       }
 
-      element.dataset.roomItemId = String(item.id);
-      element.dataset.baseFill = element.getAttribute('fill') || '';
-      element.dataset.baseStroke = element.getAttribute('stroke') || '';
-      element.style.cursor = isBusy ? 'progress' : 'pointer';
-      element.style.opacity = item.is_visible ? '1' : '0';
-      element.style.pointerEvents = item.is_visible ? 'auto' : 'none';
-      element.style.transition = 'opacity 120ms ease';
-      element.style.fill = item.is_visible ? 'rgba(255,255,255,0.001)' : 'transparent';
-      element.style.stroke =
-        item.id === activeTargetId && item.is_visible ? 'rgba(124, 197, 255, 0.95)' : 'transparent';
-      element.style.strokeWidth = item.id === activeTargetId && item.is_visible ? '6px' : '0px';
-      element.style.filter =
-        item.id === activeTargetId ? 'drop-shadow(0 0 6px rgba(124, 197, 255, 0.95))' : '';
-    });
-  }, [roomItems, activeTargetId, isBusy, svgMarkup]);
-
-  useEffect(() => {
-    if (!mapRef.current) {
-      return undefined;
-    }
-
-    const svgElement = mapRef.current.querySelector('svg');
-    if (!svgElement) {
-      return undefined;
-    }
-
-    const cleanupFns = [];
-
-    roomItems.forEach((item) => {
-      const targetElement = svgElement.getElementById
-        ? svgElement.getElementById(item.name_id)
-        : svgElement.querySelector(`#${CSS.escape(item.name_id)}`);
-
+      const targetElement = event.target.closest('[data-room-item-id]');
       if (!targetElement) {
+        return null;
+      }
+
+      const roomItemId = targetElement.getAttribute('data-room-item-id');
+      return roomItemId ? roomItemById.get(roomItemId) ?? null : null;
+    };
+
+    const handlePointerOver = (event) => {
+      const roomItem = getRoomItemFromEvent(event);
+      if (roomItem) {
+        onTargetHover?.(roomItem);
+      }
+    };
+
+    const handlePointerOut = (event) => {
+      if (!(event.target instanceof Element)) {
         return;
       }
 
-      const handleMouseEnter = () => {
-        if (!item.is_visible) {
-          return;
-        }
+      const currentItemElement = event.target.closest('[data-room-item-id]');
+      if (!currentItemElement) {
+        return;
+      }
 
-        targetElement.style.stroke = 'rgba(242, 203, 105, 0.95)';
-        targetElement.style.strokeWidth = '6px';
-        targetElement.style.filter = 'drop-shadow(0 0 6px rgba(242, 203, 105, 0.85))';
-        onTargetHover?.(item);
-      };
+      const nextItemElement =
+        event.relatedTarget instanceof Element
+          ? event.relatedTarget.closest('[data-room-item-id]')
+          : null;
 
-      const handleMouseLeave = () => {
-        targetElement.style.stroke =
-          item.id === activeTargetId && item.is_visible ? 'rgba(124, 197, 255, 0.95)' : 'transparent';
-        targetElement.style.strokeWidth = item.id === activeTargetId && item.is_visible ? '6px' : '0px';
-        targetElement.style.filter =
-          item.id === activeTargetId ? 'drop-shadow(0 0 6px rgba(124, 197, 255, 0.95))' : '';
-        onTargetHover?.(null);
-      };
+      if (nextItemElement === currentItemElement) {
+        return;
+      }
 
-      const handleClick = (event) => {
-        if (isBusy || !item.is_visible) {
-          return;
-        }
+      onTargetHover?.(null);
+    };
 
-        event.preventDefault();
-        event.stopPropagation();
-        onTargetSelect?.(item);
-      };
+    const handlePointerLeave = () => {
+      onTargetHover?.(null);
+    };
 
-      const handlePointerDown = (event) => {
-        event.stopPropagation();
-      };
+    const handlePointerDown = (event) => {
+      if (!getRoomItemFromEvent(event)) {
+        return;
+      }
 
-      targetElement.addEventListener('mouseenter', handleMouseEnter);
-      targetElement.addEventListener('mouseleave', handleMouseLeave);
-      targetElement.addEventListener('click', handleClick);
-      targetElement.addEventListener('pointerdown', handlePointerDown);
+      event.stopPropagation();
+    };
 
-      cleanupFns.push(() => {
-        targetElement.removeEventListener('mouseenter', handleMouseEnter);
-        targetElement.removeEventListener('mouseleave', handleMouseLeave);
-        targetElement.removeEventListener('click', handleClick);
-        targetElement.removeEventListener('pointerdown', handlePointerDown);
-      });
-    });
+    const handleClick = (event) => {
+      const roomItem = getRoomItemFromEvent(event);
+      if (!roomItem || isBusy) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      onTargetSelect?.(roomItem);
+    };
+
+    mapElement.addEventListener('pointerover', handlePointerOver);
+    mapElement.addEventListener('pointerout', handlePointerOut);
+    mapElement.addEventListener('pointerleave', handlePointerLeave);
+    mapElement.addEventListener('pointerdown', handlePointerDown);
+    mapElement.addEventListener('click', handleClick);
 
     return () => {
-      cleanupFns.forEach((cleanup) => cleanup());
+      mapElement.removeEventListener('pointerover', handlePointerOver);
+      mapElement.removeEventListener('pointerout', handlePointerOut);
+      mapElement.removeEventListener('pointerleave', handlePointerLeave);
+      mapElement.removeEventListener('pointerdown', handlePointerDown);
+      mapElement.removeEventListener('click', handleClick);
     };
-  }, [roomItems, onTargetSelect, onTargetHover, isBusy, svgMarkup, activeTargetId]);
+  }, [isBusy, onTargetHover, onTargetSelect, processedSvgMarkup, roomItemById]);
 
   return (
     <section className="overflow-hidden border-[5px] border-[#7a5a2e] bg-black shadow-[0_0_0_4px_#221208]">
+      <style>{`
+        .playroom-map [data-room-visible="false"] {
+          display: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+        }
+
+        .playroom-map [data-room-visible="true"] {
+          opacity: 1;
+          visibility: visible;
+        }
+      `}</style>
       <div
         ref={frameRef}
-        className="relative aspect-[16/10] min-h-[260px] overflow-hidden bg-black md:min-h-[420px]"
+        className={`relative aspect-[16/10] min-h-[260px] overflow-hidden bg-black md:min-h-[420px] ${
+          isDragging ? 'cursor-grabbing' : 'cursor-grab'
+        }`}
       >
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(11,6,2,0.14)_65%,rgba(0,0,0,0.3))]" />
         <div className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(255,219,102,0.12)_1px,transparent_1px)] [background-size:100%_4px]" />
@@ -318,12 +380,12 @@ export default function PlayRoom({
           </div>
         )}
 
-        {svgMarkup && (
+        {processedSvgMarkup && (
           <div
             ref={mapRef}
-            className="absolute left-0 top-0 select-none touch-none [&>svg]:h-full [&>svg]:w-full"
+            className="playroom-map absolute left-0 top-0 select-none touch-none [&>svg]:h-full [&>svg]:w-full"
             style={transformStyle}
-            dangerouslySetInnerHTML={{ __html: svgMarkup }}
+            dangerouslySetInnerHTML={{ __html: processedSvgMarkup }}
           />
         )}
 
