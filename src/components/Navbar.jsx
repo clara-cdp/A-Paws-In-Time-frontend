@@ -7,7 +7,7 @@ export default function Navbar() {
   const navClass = ({ isActive }) => 
     `hover:text-yellow-300 transition ${isActive ? 'text-teal-400' : ''}`;
 
-  const adminNavClass = ({ isActive }) => 
+  const separatedNavClass = ({ isActive }) => 
     `hover:text-yellow-300 transition border-l-2 border-[#94a3b8] pl-4 ${isActive ? 'text-teal-400' : ''}`;
 
   return (
@@ -26,12 +26,12 @@ export default function Navbar() {
         {isAuthenticated && (
           <>
             <NavLink to="/profile" className={navClass}>Profile</NavLink>
-            <NavLink to="/games" className={navClass}>Lobby</NavLink>
+            <NavLink to="/games" className={separatedNavClass}>Lobby</NavLink>
           </>
         )}
 
         {isAdmin && (
-          <NavLink to="/admin/users" className={adminNavClass}>Admin</NavLink>
+          <NavLink to="/admin/users" className={separatedNavClass}>Admin</NavLink>
         )}
 
         {isAuthenticated && (

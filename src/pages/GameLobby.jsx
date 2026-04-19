@@ -101,8 +101,8 @@ function SaveSlot({ game, slotNumber, onPlay, onRename, onDelete, busyAction }) 
             </PixelButton>
             <PixelButton
               type="button"
-              variant="secondary"
-              className="w-full px-4 py-3 text-[10px] !text-red-400 hover:!text-red-300"
+              variant="danger"
+              className="w-full px-4 py-3 text-[10px]"
               onClick={() => onDelete(game)}
               disabled={isBusy}
             >
@@ -394,8 +394,8 @@ export default function GameLobby() {
               </PixelButton>
               <PixelButton
                 type="button"
-                variant="primary"
-                className="w-full py-3 text-xs !bg-red-700 hover:!bg-red-600 !border-red-500"
+                variant="danger"
+                className="w-full py-3 text-xs"
                 onClick={handleDelete}
                 disabled={busyAction?.type === 'delete'}
               >

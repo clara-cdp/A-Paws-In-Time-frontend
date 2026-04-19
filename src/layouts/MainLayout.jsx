@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 export default function MainLayout() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isAuthRoute = location.pathname === '/auth';
 
   return (
     <div className={`min-h-screen flex flex-col relative overflow-hidden font-['Press_Start_2P'] selection:bg-teal-500 selection:text-black ${isAdminRoute ? 'admin-theme bg-[#020617]' : 'bg-black'}`}>
@@ -18,9 +19,11 @@ export default function MainLayout() {
 
       {/* Foreground Content */}
       <div className="z-10 w-full flex flex-col min-h-screen">
-        <div className="w-full">
-          <Navbar />
-        </div>
+        {!isAuthRoute && (
+          <div className="w-full">
+            <Navbar />
+          </div>
+        )}
 
         {/* Content container spans remaining height */}
         <div className="flex-1 w-full flex flex-col items-center justify-center p-4">

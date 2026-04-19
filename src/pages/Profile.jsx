@@ -152,9 +152,9 @@ export default function Profile() {
             
             <PixelButton 
               type="button" 
-              variant="secondary" 
+              variant="danger" 
               onClick={handleOpenDeleteModal} 
-              className="px-6 py-4 w-full md:w-1/2 text-[10px] md:text-xs flex items-center justify-center text-center leading-snug !text-red-400 hover:!text-red-300"
+              className="px-6 py-4 w-full md:w-1/2 text-[10px] md:text-xs flex items-center justify-center text-center leading-snug"
             >
               [ DELETE ACCOUNT ]
             </PixelButton>
@@ -189,9 +189,9 @@ export default function Profile() {
                 </PixelButton>
                 <PixelButton 
                   type="button" 
-                  variant="primary" 
+                  variant="danger" 
                   onClick={executeDelete}
-                  className="py-3 w-full md:w-1/2 text-xs flex items-center justify-center !bg-red-700 hover:!bg-red-600 !border-red-500"
+                  className="py-3 w-full md:w-1/2 text-xs flex items-center justify-center"
                 >
                   [ CONFIRM ]
                 </PixelButton>
