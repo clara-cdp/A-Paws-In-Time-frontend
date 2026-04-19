@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api/axios';
 import PlayRoom from '../components/game/PlayRoom';
@@ -7,6 +7,12 @@ import PocketItems from '../components/game/PocketItems';
 import GameRoomMenu from '../components/game/GameRoomMenu';
 
 const FALLBACK_VERBS = ['LOOK AT', 'USE', 'PICK UP', 'GO TO', 'OPEN', 'RESCUE', 'PULL', 'PUSH'];
+const AUDIO_TRACKS = [
+  '/assets/audio/track_1.mp3',
+  '/assets/audio/track_2.mp3',
+  '/assets/audio/track_3.mp3',
+  '/assets/audio/track_5.mp3',
+];
 
 export default function GameRoom() {
   const navigate = useNavigate();
@@ -18,9 +24,76 @@ export default function GameRoom() {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isActing, setIsActing] = useState(false);
+  const audioRef = useRef(null);
+  const trackIndexRef = useRef(0);
+  const musicEnabledRef = useRef(musicEnabled);
 
   const roomItems = useMemo(() => game?.current_room?.items ?? [], [game]);
   const verbs = FALLBACK_VERBS;
+
+  useEffect(() => {
+    musicEnabledRef.current = musicEnabled;
+  }, [musicEnabled]);
+
+  useEffect(() => {
+    const audio = new Audio(AUDIO_TRACKS[0]);
+    audio.preload = 'auto';
+    audio.loop = false;
+    audio.volume = 0.38;
+
+    const handleTrackEnd = () => {
+      trackIndexRef.current = (trackIndexRef.current + 1) % AUDIO_TRACKS.length;
+      audio.src = AUDIO_TRACKS[trackIndexRef.current];
+      audio.load();
+
+      if (musicEnabledRef.current) {
+        audio.play().catch(() => {});
+      }
+    };
+
+    audio.addEventListener('ended', handleTrackEnd);
+    audioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.removeEventListener('ended', handleTrackEnd);
+      audioRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) {
+      return undefined;
+    }
+
+    if (!musicEnabled) {
+      audio.pause();
+      return undefined;
+    }
+
+    audio.play().catch(() => {});
+    return undefined;
+  }, [musicEnabled]);
+
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      const audio = audioRef.current;
+      if (!audio || !musicEnabled) {
+        return;
+      }
+
+      audio.play().catch(() => {});
+    };
+
+    window.addEventListener('pointerdown', handleFirstInteraction, { passive: true });
+    window.addEventListener('keydown', handleFirstInteraction);
+
+    return () => {
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, [musicEnabled]);
 
   useEffect(() => {
     let ignore = false;
