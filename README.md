@@ -126,12 +126,26 @@ The API is responsible for:
 - inventory updates
 - items visibility
 - puzzle interaction rules
+  
+
+# 🤫 project sneak peek
+
+<img width="1172" height="942" alt="Screenshot 2026-04-26 100847" src="https://github.com/user-attachments/assets/7319b318-aa4d-4389-be21-57a2e6b9035a" />   
+
+<img width="1159" height="920" alt="Screenshot 2026-04-26 100652" src="https://github.com/user-attachments/assets/8fac9dd8-ce45-4274-9f0e-d4eeb6a70b62" />   
+
+
+
+
+<img width="1219" height="940" alt="Screenshot 2026-04-26 100343" src="https://github.com/user-attachments/assets/4de4001f-42cd-4a19-9f21-2ef9bd30873b" />   
+
+<img width="1218" height="942" alt="Screenshot 2026-04-26 100557" src="https://github.com/user-attachments/assets/4a12ad86-5f58-4bcc-a5af-03837f6bc42e" />   
 
 
 
 ---
 ## Author
-Clara Cerda de Palou
+Clara Cerdà de Palou
 
 ## Acknowledgments
 Barcelona Activa Fullstack PHP Bootcamp (2025/2026)
