@@ -54,6 +54,8 @@ Static assets used by the SPA:
 - inventory icons
 - music tracks
 
+
+
 # 🚀 Getting Started
 
 ### Prerequisites
@@ -112,9 +114,9 @@ npm run build
 npm run preview
 ```
 
-## Backend Dependency
+### Backend Dependency
 
-This frontend is designed to work together with the Laravel API 
+> This frontend is designed to work together with the Laravel API    
 > [https://github.com/clara-cdp/A-Paws-In-Time-API]
 
 
@@ -127,6 +129,12 @@ The API is responsible for:
 - items visibility
 - puzzle interaction rules
   
+# live server:
+you can test the game at: 
+https://a-paws-in-time-frontend.onrender.com/auth
+> unfortunately the free tier delay makes the experience slower... for faster interactions try it in local.
+
+
 
 # 🤫 project sneak peek
 
